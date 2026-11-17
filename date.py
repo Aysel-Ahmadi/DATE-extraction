@@ -1,32 +1,29 @@
 #https://github.com/Aysel-Ahmadi/DATE-extraction.git
  
 
+
 import re
 
 text = input()
 
-year = r"([0-9]{4})"
+pattern = r'(?<!\d)(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4})(?!\d)'
 
-month = r"(0[1-9]|1[0-2])"
+dates = re.finditer(pattern, text)
 
-day = r"(0[1-9]|[12][0-9]|3[01])"
+result = []
 
-pattern = rf"(?<![0-9])({year}-{month}-{day}|{day}/{month}/{year})(?![0-9])"
+for match in dates:
+    date = match.group()
 
-matches = re.finditer(pattern, text)
+    if '-' in date:
+        year, month, day = date.split('-')
+    else:
+        day, month, year = date.split('/')
 
-dates = []
+    if 1 <= int(month) <= 12 and 1 <= int(day) <= 31:
+        result.append(f"{year}-{month}-{day}")
 
-for match in matches:
- date = match.group()
-
-if "/" in date:
-    d, m, y = date.split("/")
-    date = f"{y}-{m}-{d}"
-dates.append(date)
-
-if dates:
-  for date in dates:
-   print(date)
-  else:
+if result:
+    print('\n'.join(result))
+else:
     print("None")
